@@ -6,8 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E4E52B7E2D7A0B7900B03656 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E52B7D2D7A0B7900B03656 /* StoreKit.framework */; };
+		E4E52B812D7AA52A00B03656 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = E4E52B802D7AA52A00B03656 /* RevenueCat */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		E4A1FB342D7224C100952F11 /* FitnessApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitnessApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4E52B7D2D7A0B7900B03656 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +29,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4E52B812D7AA52A00B03656 /* RevenueCat in Frameworks */,
+				E4E52B7E2D7A0B7900B03656 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +41,7 @@
 			isa = PBXGroup;
 			children = (
 				E4A1FB362D7224C100952F11 /* FitnessApp */,
+				E4E52B7C2D7A0B7900B03656 /* Frameworks */,
 				E4A1FB352D7224C100952F11 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +52,14 @@
 				E4A1FB342D7224C100952F11 /* FitnessApp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E4E52B7C2D7A0B7900B03656 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E4E52B7D2D7A0B7900B03656 /* StoreKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +82,7 @@
 			);
 			name = FitnessApp;
 			packageProductDependencies = (
+				E4E52B802D7AA52A00B03656 /* RevenueCat */,
 			);
 			productName = FitnessApp;
 			productReference = E4A1FB342D7224C100952F11 /* FitnessApp.app */;
@@ -94,6 +112,9 @@
 			);
 			mainGroup = E4A1FB2B2D7224C100952F11;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E4E52B7F2D7AA52A00B03656 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E4A1FB352D7224C100952F11 /* Products */;
 			projectDirPath = "";
@@ -328,6 +349,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E4E52B7F2D7AA52A00B03656 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.19.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E4E52B802D7AA52A00B03656 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4E52B7F2D7AA52A00B03656 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCat;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E4A1FB2C2D7224C100952F11 /* Project object */;
 }
