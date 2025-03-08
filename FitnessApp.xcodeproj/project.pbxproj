@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E4E52B7E2D7A0B7900B03656 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E52B7D2D7A0B7900B03656 /* StoreKit.framework */; };
 		E4E52B812D7AA52A00B03656 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = E4E52B802D7AA52A00B03656 /* RevenueCat */; };
+		E4E52B852D7ADC3B00B03656 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = E4E52B842D7ADC3B00B03656 /* RevenueCatUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 			files = (
 				E4E52B812D7AA52A00B03656 /* RevenueCat in Frameworks */,
 				E4E52B7E2D7A0B7900B03656 /* StoreKit.framework in Frameworks */,
+				E4E52B852D7ADC3B00B03656 /* RevenueCatUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +85,7 @@
 			name = FitnessApp;
 			packageProductDependencies = (
 				E4E52B802D7AA52A00B03656 /* RevenueCat */,
+				E4E52B842D7ADC3B00B03656 /* RevenueCatUI */,
 			);
 			productName = FitnessApp;
 			productReference = E4A1FB342D7224C100952F11 /* FitnessApp.app */;
@@ -366,6 +369,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E4E52B7F2D7AA52A00B03656 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
 			productName = RevenueCat;
+		};
+		E4E52B842D7ADC3B00B03656 /* RevenueCatUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4E52B7F2D7AA52A00B03656 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCatUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

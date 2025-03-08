@@ -20,7 +20,9 @@ struct FitnessApp: App {
     
     init() {
         Purchases.logLevel = .debug
+        
         Purchases.configure(withAPIKey: "appl_GTAYAeABzVycyUzBmhsyDKdPYhz")
+        // vid paused at 3:27.46
     }
     
     var body: some Scene {
