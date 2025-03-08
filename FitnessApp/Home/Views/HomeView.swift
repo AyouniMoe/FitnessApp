@@ -12,11 +12,8 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
-    
-    
-    
-    
-    
+    @Binding var isPremium: Bool
+    @State var showPaywall = false
     
     var body: some View {
         NavigationStack {
@@ -89,7 +86,11 @@ struct HomeView: View {
                         Spacer()
                         
                         Button {
-                            print("show more")
+                            if isPremium {
+                            } else {
+                                showPaywall = true
+                            }
+                            
                         } label: {
                             Text ("Show More")
                                 .padding(.all, 10)
@@ -99,13 +100,13 @@ struct HomeView: View {
                         }
                         
                     }
-//                    .padding(.horizontal)
-//                    
-//                    LazyVGrid(columns: Array(repeating: GridItem(spacing: 20), count: 2)) {
-//                        ForEach(viewModel.activities, id: \.id) { activity in
-//                            ActivityCard(activity: activity)
-//                        }
-//                    }
+                    //                    .padding(.horizontal)
+                    //
+                    //                    LazyVGrid(columns: Array(repeating: GridItem(spacing: 20), count: 2)) {
+                    //                        ForEach(viewModel.activities, id: \.id) { activity in
+                    //                            ActivityCard(activity: activity)
+                    //                        }
+                    //                    }
                     .padding(.horizontal)
                     
                     if !viewModel.activities.isEmpty {
@@ -124,14 +125,27 @@ struct HomeView: View {
                         
                         Spacer()
                         
-                        NavigationLink {
-                            EmptyView()
-                        } label: {
-                            Text ("Show More")
-                                .padding(.all, 10)
-                                .foregroundColor(.white)
-                                .background(.blue)
-                                .cornerRadius(20)
+                        if isPremium {
+                            NavigationLink {
+                                EmptyView()
+                            } label: {
+                                Text ("Show More")
+                                    .padding(.all, 10)
+                                    .foregroundColor(.white)
+                                    .background(.blue)
+                                    .cornerRadius(20)
+                            }
+                        } else {
+                            Button {
+                                showPaywall = true
+                                
+                            } label: {
+                                Text ("Show More")
+                                    .padding(.all, 10)
+                                    .foregroundColor(.white)
+                                    .background(.blue)
+                                    .cornerRadius(20)
+                            }
                         }
                     }
                     .padding(.horizontal)
@@ -146,16 +160,17 @@ struct HomeView: View {
                 .padding(.bottom)
             }
         }
-    }
-    
-    
-    struct HomeView_Previews: PreviewProvider {
-        static var previews: some View {
-            HomeView()
+        
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(isPremium: $isPremium)
         }
     }
-    
 }
-#Preview {
-    
-}
+        
+        struct HomeView_Previews: PreviewProvider {
+            static var previews: some View {
+                HomeView(isPremium: .constant(false))
+            }
+        }
+        
+

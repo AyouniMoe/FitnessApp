@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import RevenueCat
+
 
 
 
@@ -15,6 +15,8 @@ import RevenueCat
 struct PaywallView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel = PaywallViewModel()
+    @Binding var isPremium: Bool
+    
     
     var body: some View {
         VStack(spacing: 20) {
@@ -54,12 +56,22 @@ struct PaywallView: View {
                 if let offering = viewModel.currentOffering {
                     ForEach(offering.availablePackages) { package in
                         Button {
-                            Purchases.shared.purchase(package: package) {
-                                (transaction, customerInfo, error, userCancelled) in
-                                if customerInfo?.entitlements["Premium"]?.isActive == true {
+                            Task {
+                                do {
+                                    try await viewModel.purchase(package: package)
+                                    isPremium = true
                                     dismiss()
+                                } catch {
+                                    print(error.localizedDescription)
                                 }
                             }
+//                            Purchases.shared.purchase(package: package) {
+//                                (transaction, customerInfo, error, userCancelled) in
+//                                if customerInfo?.entitlements["Premium"]?.isActive == true {
+//                                    dismiss()
+//                                }
+//                            }
+                            
                         } label: {
                             VStack(spacing: 8) {
                                 Text(package.storeProduct.subscriptionPeriod?
@@ -85,9 +97,13 @@ struct PaywallView: View {
         .padding(.horizontal, 40)
         
         Button {
-            Purchases.shared.restorePurchases { customerInfo, error in
-                if customerInfo?.entitlements["Premium"]?.isActive == true {
-                    dismiss()
+            Task {
+                do {
+                   try await viewModel.restorePurchases()
+                     isPremium = true
+                    dismiss
+                } catch {
+                    print(error.localizedDescription)
                 }
             }
         } label: {
@@ -104,10 +120,10 @@ struct PaywallView: View {
             Spacer()
     }
         .frame(maxHeight: .infinity, alignment: .top)
-    
+        .padding(.top)
     }
 }
 
 #Preview {
-    PaywallView()
+    PaywallView(isPremium: .constant(false))
 }
