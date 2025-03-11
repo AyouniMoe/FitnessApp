@@ -17,7 +17,7 @@ class DatabaseManager {
     private init() {}
     
     // `database` is an instance of Firestore, which provides methods to interact with the Firestore database
-    let database = Firestore.firestore()
+    private let database = Firestore.firestore()
     
     // `weeklyLeaderboard` generates the name of the Firestore collection for the current week's leaderboard
     let weeklyLeaderboard = "\(Date().mondayDateFormat())-leaderboard"
@@ -32,16 +32,8 @@ class DatabaseManager {
     }
     
     // Post (update) Leaderboard for current user: This function updates the user's step count in the leaderboard
-    func postStepCountUpdateFor(username: String, count: Int) async throws {
-        // Creates a new LeaderboardUser instance with the provided username and step count
-        let leader = LeaderboardUser(username: username, count: count)
-        
-        // Encodes the `LeaderboardUser` instance into a format that Firestore can store (e.g., dictionary)
+    func postStepCountUpdateForUser(leader: LeaderboardUser) async throws {
         let data = try Firestore.Encoder().encode(leader)
-        
-        // Updates (or adds) a document in the Firestore collection for the current week's leaderboard
-        // The document is identified by the username of the user, and the encoded `data` is saved into it
-        // The `merge: false` argument ensures that the document will be completely overwritten (not merged) if it exists
-        try await database.collection(weeklyLeaderboard).document(username).setData(data, merge: false)
+        try await database.collection(weeklyLeaderboard).document(leader.username).setData(data, merge: false)
     }
 }
