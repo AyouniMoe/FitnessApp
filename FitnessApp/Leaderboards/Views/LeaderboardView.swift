@@ -8,25 +8,24 @@
 import SwiftUI
 
 struct LeaderboardUser: Codable, Identifiable {
-    let id: Int
-    let createdAt: String
-    let usename: String
+    let id = UUID()
+    let username: String
     let count: Int
 }
 
 class LeaderboardViewModel: ObservableObject {
     var mockData = [
-        LeaderboardUser(id: 0, createdAt: "", usename: "Ayouni", count: 65636),
-        LeaderboardUser(id: 1, createdAt: "", usename: "Vivek", count: 6536),
-        LeaderboardUser(id: 2, createdAt: "", usename: "Sarshad", count: 6563),
-        LeaderboardUser(id: 3, createdAt: "", usename: "Flavean", count: 5636),
-        LeaderboardUser(id: 4, createdAt: "", usename: "Melina", count: 6566),
-        LeaderboardUser(id: 5, createdAt: "", usename: "Lucas", count: 6636),
-        LeaderboardUser(id: 6, createdAt: "", usename: "Denish", count: 6636),
-        LeaderboardUser(id: 7, createdAt: "", usename: "Hemaa", count: 6636),
-        LeaderboardUser(id: 8, createdAt: "", usename: "Bhoomika", count: 6636),
-        LeaderboardUser(id: 9, createdAt: "", usename: "Madeline", count: 6636),
-        LeaderboardUser(id: 10, createdAt: "", usename: "Isabella", count: 6636),
+        LeaderboardUser(username: "Ayouni", count: 65636),
+        LeaderboardUser(username: "Vivek", count: 6536),
+        LeaderboardUser(username: "Sarshad", count: 6563),
+        LeaderboardUser(username: "Flavean", count: 5636),
+        LeaderboardUser(username: "Melina", count: 6566),
+        LeaderboardUser(username: "Lucas", count: 6636),
+        LeaderboardUser(username: "Denish", count: 6636),
+        LeaderboardUser(username: "Hemaa", count: 6636),
+        LeaderboardUser(username: "Bhoomika", count: 6636),
+        LeaderboardUser(username: "Madeline", count: 6636),
+        LeaderboardUser(username: "Isabella", count: 6636),
     ]
 }
 struct LeaderboardView: View {
@@ -50,8 +49,8 @@ struct LeaderboardView: View {
             LazyVStack(spacing: 24) {
                 ForEach(viewModel.mockData) { person in
                     HStack {
-                        Text("\(person.id).")
-                        Text(person.usename)
+                        Text("1.")
+                        Text(person.username)
                         Spacer()
                         Text("\(person.count)")
                     }
@@ -63,6 +62,13 @@ struct LeaderboardView: View {
         .frame(maxHeight: .infinity, alignment: .top)
         .fullScreenCover(isPresented: $showTerms) {
             TermsView()
+        }
+        .task {
+            do {
+                try await DatabaseManager.shared.postStepCountUpdateFor(username: "test", count: 1040)
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
 }
