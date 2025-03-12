@@ -166,9 +166,21 @@ class HealthManager {
                 return
             }
        
-        let workoutsArray = workouts.map( { Workout(id: nil, title: $0.workoutActivityType.name, image: $0.workoutActivityType.image, tintColor: Color($0.workoutActivityType.color), duration:
-            "\(Int($0.duration)/60) mins", date: $0.startDate.formatWorkoutDate(), calories:
-            ($0.totalEnergyBurned?.doubleValue(for: .kilocalorie()).formattedNumberString() ?? "-") + "kcal") } )
+//        let workoutsArray = workouts.map( { Workout(id: nil, title: $0.workoutActivityType.name, image: $0.workoutActivityType.image, tintColor: Color($0.workoutActivityType.color), duration:
+//            "\(Int($0.duration)/60) mins", date: $0.startDate.formatWorkoutDate(), calories:
+//            ($0.totalEnergyBurned?.doubleValue(for: .kilocalorie()).formattedNumberString() ?? "-") + "kcal") } )
+        let workoutsArray = workouts.map { workout in
+            let activeEnergy = workout.statistics(for: HKQuantityType(.activeEnergyBurned))?.sumQuantity()?.doubleValue(for: .kilocalorie()) ?? 0
+            return Workout(
+                id: nil,
+                title: workout.workoutActivityType.name,
+                image: workout.workoutActivityType.image,
+                tintColor: Color(workout.workoutActivityType.color),
+                duration: "\(Int(workout.duration) / 60) mins",
+                date: workout.startDate.formatWorkoutDate(),
+                calories: activeEnergy.formattedNumberString() + "kcal"
+            )
+        }
 
        
         completion(.success(workoutsArray))
