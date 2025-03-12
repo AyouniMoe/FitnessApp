@@ -66,7 +66,17 @@ import FirebaseFirestore
             .fullScreenCover(isPresented: $showTerms) {
                 TermsView()
             }
-            
+            .onChange(of: showTerms) { _ in
+                if !showTerms && username != nil {
+                    Task {
+                        do {
+                            try await viewModel.setupLeaderboardData()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
+            }
         }
     }
     

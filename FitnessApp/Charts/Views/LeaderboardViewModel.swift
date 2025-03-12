@@ -28,25 +28,28 @@ class LeaderboardViewModel: ObservableObject {
     init() {
         Task {
             do {
+                try await setupLeaderboardData()
                 
-                try await postStepCountForUser(username: "xcode", count: 123)
-                let result = try await fetchLeaderboards()
-                DispatchQueue.main.async {
-                    self.leaderResult = result 
-                }
             } catch {
                 print(error.localizedDescription)
             }
         }
     }
-        
-        struct LeaderboardResult {
+    func setupLeaderboardData() async throws {
+        try await postStepCountForUser()
+        let result = try await fetchLeaderboards()
+        DispatchQueue.main.async {
+            self.leaderResult = result
+        }
+    }
+    
+         struct LeaderboardResult {
             let user: LeaderboardUser?
             let top10: [LeaderboardUser]
             
         }
         
-        func fetchLeaderboards() async throws -> LeaderboardResult {
+        private func fetchLeaderboards() async throws -> LeaderboardResult {
             let leaders = try await DatabaseManager.shared.fetchLeaderboards()
             let top10 = Array(leaders.sorted(by: { $0.count > $1.count }).prefix(10))
             let username = UserDefaults.standard.string(forKey: "username")
@@ -62,7 +65,19 @@ class LeaderboardViewModel: ObservableObject {
             
         }
     }
-    func postStepCountForUser(username: String, count: Int) async throws {
+    private func postStepCountForUser() async throws {
+        guard let username = UserDefaults.standard.string(forKey: "username") else {
+            throw URLError(.badURL)
+        }
+        let steps = try await fetchCurrentWeekStepCount()
         try await DatabaseManager.shared.postStepCountUpdateForUser(leader:
-                LeaderboardUser(username: username, count: count))
+                LeaderboardUser(username: username, count: Int(steps)))
     }
+private func fetchCurrentWeekStepCount() async throws -> Double {
+    try await withCheckedThrowingContinuation({ continuation in
+        HealthManager.shared.fetchCurrentWeekStepCount { result in
+            continuation.resume(with: result)
+        }
+    })
+}
+

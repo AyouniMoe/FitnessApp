@@ -35,19 +35,10 @@ extension Date {
         return formatter.string(from: self)
     }
     
-    func fetchPreviousMonday()   -> Date {
-        
-        let calendar = Calendar.current
-        let weekday = calendar.component(.weekday, from: self)
-        let daysToSubtract = (weekday + 5) % 7 + 2
-        var dateComponents = DateComponents()
-        dateComponents.day = -daysToSubtract
-        return calendar.date(byAdding: dateComponents, to: self) ??
-        Date()
-    }
+   
     
     func mondayDateFormat() -> String {
-        let monday = self.fetchPreviousMonday( )
+        let monday = Date.startOfWeek
         let formatter = DateFormatter()
         formatter.dateFormat = "MM-dd-yyy"
         return formatter.string(from: monday)
@@ -277,5 +268,23 @@ extension HealthManager {
             }
             healthStore.execute(query)
         }
+    }
+}
+
+//MARK: Leaderboard view
+extension HealthManager {
+    func fetchCurrentWeekStepCount(completion: @escaping (Result<Double, Error>) -> Void) {
+        let steps = HKQuantityType(.stepCount)
+        let predicate = HKQuery.predicateForSamples(withStart: .startOfWeek, end: Date())
+        let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate) { _, results, error in
+            guard let quantity = results?.sumQuantity(), error == nil else {
+                completion(.failure(NSError(domain: "HealthManagerError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch HealthKit data."])))
+                
+                return
+            }
+            let steps = quantity.doubleValue(for: .count())
+            completion(.success(steps))
+        }
+        healthStore.execute(query)
     }
 }
