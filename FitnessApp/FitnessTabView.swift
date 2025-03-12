@@ -46,6 +46,7 @@ struct FitnessTabView: View {
                 }
         }
         . onAppear {
+            print(username)
             showTerms = username == nil
             Purchases.shared.getCustomerInfo { customerInfo, error in
                 isPremium = customerInfo?.entitlements["premium"]?.isActive == true

@@ -9,7 +9,7 @@ import Foundation
 
 class LeaderboardViewModel: ObservableObject {
     
-    @Published var leaders = [LeaderboardUser]()
+    @Published var leaderResult = LeaderboardResult(user: nil, top10: [])
     
     var mockData = [
         LeaderboardUser(username: "Ayouni", count: 65636),
@@ -32,7 +32,7 @@ class LeaderboardViewModel: ObservableObject {
                 try await postStepCountForUser(username: "xcode", count: 123)
                 let result = try await fetchLeaderboards()
                 DispatchQueue.main.async {
-                    self.leaders = result.top10
+                    self.leaderResult = result 
                 }
             } catch {
                 print(error.localizedDescription)
@@ -51,7 +51,9 @@ class LeaderboardViewModel: ObservableObject {
             let top10 = Array(leaders.sorted(by: { $0.count > $1.count }).prefix(10))
             let username = UserDefaults.standard.string(forKey: "username")
             
-            if let username = username {
+           // if let username = username, top10.contains(where: { _ in 0.username == username}) {
+            if let username = username, !top10.contains(where: { $0.username == username }) {
+
                 let user = leaders.first(where: { $0.username == username})
                 return LeaderboardResult(user: user, top10: top10)
             } else {
