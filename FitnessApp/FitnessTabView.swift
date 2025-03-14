@@ -44,6 +44,13 @@ struct FitnessTabView: View {
                     Image(systemName: "person.3.fill")
                     Text("Leaderboards")
                 }
+            ProfileView()
+                .tag("Profile")
+                .tabItem {
+                    Image(systemName: "person")
+                    Text("Profile")
+                }
+            
         }
         . onAppear {
             print(username)

@@ -156,9 +156,35 @@ struct ProfileView: View {
     // MARK: - Info Buttons
     private var infoButtons: some View {
         VStack {
-            FitnessProfileItemButton(title: "Contact Us", image: "envelope") { print("contact") }
-            FitnessProfileItemButton(title: "Privacy Policy", image: "doc") { print("privacy") }
-            FitnessProfileItemButton(title: "Terms of Service", image: "doc") { print("terms") }
+            FitnessProfileItemButton(title: "Contact Us", image: "envelope") { viewModel.presentEmailApp() }
+//            FitnessProfileItemButton(title: "Privacy Policy", image: "doc") { print("privacy") }
+//            FitnessProfileItemButton(title: "Terms of Service", image: "doc") { print("terms")
+//            }
+            
+            Link(destination: URL(string:"https://github.com/AyouniMoe/FitnessApp/blob/main/policy.md")!) {
+                HStack {
+                    Image(systemName: "doc")
+                    
+                    Text("Privacy Policy")
+                    
+                }
+                .foregroundColor(.primary)
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            
+            Link(destination:
+                    URL(string:"https://github.com/AyouniMoe/FitnessApp/blob/main/terms.md")!) {
+                HStack {
+                    Image(systemName: "doc")
+                    
+                    Text("Terms of Use")
+                    
+                }
+                .foregroundColor(.primary)
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
         .background(RoundedRectangle(cornerRadius: 10).fill(.gray.opacity(0.15)))
     }
