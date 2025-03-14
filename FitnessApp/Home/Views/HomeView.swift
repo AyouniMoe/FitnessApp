@@ -159,18 +159,27 @@ struct HomeView: View {
                 }
                 .padding(.bottom)
             }
-        }
-        
-        .sheet(isPresented: $showPaywall) {
-            PaywallView(isPremium: $isPremium)
-        }
-    }
-}
-        
-        struct HomeView_Previews: PreviewProvider {
-            static var previews: some View {
-                HomeView(isPremium: .constant(false))
+            //{
+            //{
+            
+            .alert("Oops", isPresented: $viewModel.presentError, actions: {
+                Text("Ok")
+                
+            }, message: {
+                Text("There was an issue fetching some of your data. Some health tracking requires an Apple Watch. Please make sure your Apple Watch is turned on and paired with your iPhone.")
+            })
+            
+            .sheet(isPresented: $showPaywall) {
+                PaywallView(isPremium: $isPremium)
             }
         }
-        
-
+    }
+    
+    struct HomeView_Previews: PreviewProvider {
+        static var previews: some View {
+            HomeView(isPremium: .constant(false))
+        }
+    }
+    
+    
+}
