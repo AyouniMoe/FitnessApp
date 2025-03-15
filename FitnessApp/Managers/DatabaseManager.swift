@@ -19,8 +19,9 @@ class DatabaseManager {
     // `database` is an instance of Firestore, which provides methods to interact with the Firestore database
     private let database = Firestore.firestore()
     
+    
     // `weeklyLeaderboard` generates the name of the Firestore collection for the current week's leaderboard
-    let weeklyLeaderboard = "\(Date().mondayDateFormat())-leaderboard"
+    private let weeklyLeaderboard = "\(Date().mondayDateFormat())-leaderboards"
     // `Date().mondayDateFormat()` is presumably a method that formats the current date to get the start of the week.
     // Example: If the current date is March 10, 2025, it might return "2025-03-10-leaderboard".
 

@@ -7,7 +7,10 @@
 
 import Foundation
 import HealthKit
-import SwiftUICore
+//import SwiftUICore
+//import SwiftUI
+
+
 
 
 class HealthManager {
@@ -19,10 +22,13 @@ class HealthManager {
         
         Task {
             do {
+                
                 try await requestHealthKitAccess()
                 
             } catch {
-                print(error.localizedDescription)
+                DispatchQueue.main.async {
+                    presentAlert(title: "Oops", message: "We were unable to access your health data. Allow access to use the the apps features")
+                }
             }
         }
         
@@ -42,7 +48,7 @@ class HealthManager {
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
         let query = HKStatisticsQuery(quantityType: calories, quantitySamplePredicate: predicate) { _, results, error in
             guard let quantity = results?.sumQuantity(), error == nil else {
-                completion(.failure(NSError(domain: "HealthManagerError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch HealthKit data."])))
+                completion(.failure(error!))
                 
                 return
             }
@@ -56,7 +62,7 @@ class HealthManager {
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
         let query = HKStatisticsQuery(quantityType: exercise, quantitySamplePredicate: predicate) { _, results, error in
             guard let quantity = results?.sumQuantity(), error == nil else {
-                completion(.failure(NSError(domain: "HealthManagerError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch HealthKit data."])))
+                completion(.failure(error!))
                 
                 return
             }
@@ -70,7 +76,7 @@ class HealthManager {
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
         let query = HKSampleQuery(sampleType: stand, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { _, results, error in
             guard let samples = results as? [HKCategorySample], error == nil else {
-                completion(.failure(NSError(domain: "HealthManagerError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch HealthKit data."])))
+                completion(.failure(error!))
                 
                 return
             }
@@ -87,7 +93,7 @@ class HealthManager {
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
         let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate) { _, results, error in
             guard let quantity = results?.sumQuantity(), error == nil else {
-                completion(.failure(NSError(domain: "HealthManagerError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch HealthKit data."])))
+                completion(.failure(error!))
                 
                 return
             }
@@ -104,7 +110,7 @@ class HealthManager {
         let query = HKSampleQuery(sampleType: workout, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { [weak self] _, results, error in
             
             guard let workouts = results as? [HKWorkout], let self = self, error == nil else {
-                completion(.failure(URLError(.badURL)))
+                completion(.failure(error!))
                 return
             }
             
@@ -162,7 +168,7 @@ class HealthManager {
     let query = HKSampleQuery(sampleType: workouts, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors : [sortDescriptor]) { _, results, error in
             
             guard let workouts = results as? [HKWorkout], error == nil else {
-                completion(.failure(URLError(.badURL)))
+                completion(.failure(error!))
                 return
             }
        
@@ -195,12 +201,40 @@ class HealthManager {
 //MARK: ChartsView Data
 extension HealthManager {
     
+    func fetchDailySteps(startDate: Date, completion: @escaping (Result<[DailyStepModel], Error>) -> Void) {
+        let steps = HKQuantityType(.stepCount)
+        let interval = DateComponents(day: 1)
+        
+        let query = HKStatisticsCollectionQuery(quantityType: steps, quantitySamplePredicate: nil, anchorDate:
+            startDate, intervalComponents: interval)
+        
+        query.initialResultsHandler = { _, results, error in
+            guard let result = results, error == nil else {
+                completion(.failure(error!))
+                return
+            }
+            var dailySteps = [DailyStepModel]()
+            result.enumerateStatistics(from: startDate, to: Date()) { statistics, stop in
+                dailySteps.append(DailyStepModel(date: statistics.startDate, count:
+                Int(statistics.sumQuantity()?.doubleValue(for: .count()) ?? 0)))
+            }
+            completion(.success(dailySteps))
+        }
+        healthStore.execute(query)
+    }
+    
+    
+    
+    
+    
+    
+    
     struct YearChartDataResult {
         let ytd: [MonthlyStepModel]
         let oneYear: [MonthlyStepModel]
     }
     
-    func fetchYTDAndOneYearData(completion: @escaping (Result<YearChartDataResult, Error>) -> Void) {
+    func fetchYTDAndOneYearChartData(completion: @escaping (Result<YearChartDataResult, Error>) -> Void) {
         let steps = HKQuantityType(.stepCount)
         let calendar = Calendar.current
         
@@ -243,7 +277,7 @@ extension HealthManager {
         let predicate = HKQuery.predicateForSamples(withStart: .startOfWeek, end: Date())
         let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate) { _, results, error in
             guard let quantity = results?.sumQuantity(), error == nil else {
-                completion(.failure(NSError(domain: "HealthManagerError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch HealthKit data."])))
+                completion(.failure(error!))
                 
                 return
             }
@@ -254,3 +288,4 @@ extension HealthManager {
     }
 }
 
+//FIGURING THECHARTSVIEWMODEL ERRORS CONTINUE @ 6:33:25 IN VID WHEN READY

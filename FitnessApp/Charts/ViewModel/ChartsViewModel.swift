@@ -104,7 +104,7 @@ class ChartsViewModel: ObservableObject {
     
     func fetchOneWeekStepData() async throws {
         try await withCheckedThrowingContinuation({ continuation in
-            healthManager.fetchDailySteps(startDate: .oneWeekAgo) { [weak self] result in
+            healthManager.fetchDailySteps(startDate: /*ADDED THIS HERE SINCE IT COULD HELP SOLVE THE PROBLEM*/ .startOfWeek/*oneWeekAgo*/) { [weak self] result in
                 guard let self = self else {return}
                 
                 switch result {
@@ -187,7 +187,7 @@ class ChartsViewModel: ObservableObject {
     }
     func fetchYTDAndOneYearChartData() async throws {
         try await withCheckedThrowingContinuation({ continuation in
-            healthManager.fetchYTDAndOneYearData { [weak self] result in
+            healthManager.fetchYTDAndOneYearChartData { [weak self] result in
                 guard let self = self else {return}
                 
                 switch result {
