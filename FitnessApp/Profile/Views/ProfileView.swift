@@ -157,9 +157,9 @@ struct ProfileView: View {
     private var infoButtons: some View {
         VStack {
             FitnessProfileItemButton(title: "Contact Us", image: "envelope") { viewModel.presentEmailApp() }
-//            FitnessProfileItemButton(title: "Privacy Policy", image: "doc") { print("privacy") }
-//            FitnessProfileItemButton(title: "Terms of Service", image: "doc") { print("terms")
-//            }
+            //            FitnessProfileItemButton(title: "Privacy Policy", image: "doc") { print("privacy") }
+            //            FitnessProfileItemButton(title: "Terms of Service", image: "doc") { print("terms")
+            //            }
             
             Link(destination: URL(string:"https://github.com/AyouniMoe/FitnessApp/blob/main/policy.md")!) {
                 HStack {
@@ -186,7 +186,14 @@ struct ProfileView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+        
         .background(RoundedRectangle(cornerRadius: 10).fill(.gray.opacity(0.15)))
+    //IT SEEMS LIKE HERE IS WHERE I SHOULD ADD THE CONTACT US ALERT FROM 6:29:04 IN THE VIDEO
+        .alert("Oops", isPresented: $viewModel.showAlert) {
+            Text("Ok")
+        } message: {
+            Text("We were unable to open your mail application. Please have your mail application installed.")
+        }
     }
 
     // MARK: - Reusable Components

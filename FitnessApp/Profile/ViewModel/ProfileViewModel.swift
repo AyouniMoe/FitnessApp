@@ -17,6 +17,8 @@ class ProfileViewModel: ObservableObject {
     @Published var profileImage: String? = UserDefaults.standard.string(forKey: "profileImage")
     @Published var selectedImage: String? = UserDefaults.standard.string(forKey: "profileImage")
     
+    @Published var showAlert = false
+    
     var images = [
         "user1", "user2", "user3", "user4", "user5", "user6", "user7", "user8"
     ]
@@ -67,7 +69,10 @@ class ProfileViewModel: ObservableObject {
         if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url)
         } else {
-            return
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.showAlert = true
+            }
         }
             
             

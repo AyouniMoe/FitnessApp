@@ -10,7 +10,7 @@ import Foundation
 class LeaderboardViewModel: ObservableObject {
     
     @Published var leaderResult = LeaderboardResult(user: nil, top10: [])
-    
+    @Published var showAlert = false
     var mockData = [
         LeaderboardUser(username: "Ayouni", count: 65636),
         LeaderboardUser(username: "Vivek", count: 6536),
@@ -26,21 +26,26 @@ class LeaderboardViewModel: ObservableObject {
     ]
     
     init() {
+        setupLeaderboardData()
+    }
+    
+    func setupLeaderboardData() {
         Task {
             do {
-                try await setupLeaderboardData()
-                
+                try await postStepCountForUser()
+                let result = try await fetchLeaderboards()
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.leaderResult = result
+                }
             } catch {
-                print(error.localizedDescription)
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.showAlert = true
+                }
             }
         }
-    }
-    func setupLeaderboardData() async throws {
-        try await postStepCountForUser()
-        let result = try await fetchLeaderboards()
-        DispatchQueue.main.async {
-            self.leaderResult = result
-        }
+        
     }
     
          struct LeaderboardResult {
@@ -65,9 +70,12 @@ class LeaderboardViewModel: ObservableObject {
             
         }
     }
+enum LeaderboardViewModelError: Error {
+    case unableToFetchUsername
+}
     private func postStepCountForUser() async throws {
         guard let username = UserDefaults.standard.string(forKey: "username") else {
-            throw URLError(.badURL)
+            throw LeaderboardViewModelError.unableToFetchUsername
         }
         let steps = try await fetchCurrentWeekStepCount()
         try await DatabaseManager.shared.postStepCountUpdateForUser(leader:
