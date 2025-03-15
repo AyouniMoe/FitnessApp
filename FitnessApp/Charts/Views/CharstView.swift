@@ -92,6 +92,11 @@ struct CharstView: View {
                 }
             }
         }
+        alert("Oops", isPresented: $viewModel.presentError, actions: {
+            Text("Ok")
+        }, message: {
+            Text("We ran into an error fetching your data. Please make sure you allow access and try again.")
+        })
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 }

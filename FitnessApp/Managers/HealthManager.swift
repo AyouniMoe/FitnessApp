@@ -203,19 +203,20 @@ extension HealthManager {
     func fetchYTDAndOneYearData(completion: @escaping (Result<YearChartDataResult, Error>) -> Void) {
         let steps = HKQuantityType(.stepCount)
         let calendar = Calendar.current
+        
         var oneYearMonths = [MonthlyStepModel]()
         var ytdMonths = [MonthlyStepModel]()
-        
         for i in 0...11 {
             let month = calendar.date(byAdding: .month, value: -i, to: Date()) ?? Date()
             let (startOfMonth, endOfMonth) = month.fetchMonthStartAndEndDate()
             let predicate = HKQuery.predicateForSamples(withStart: startOfMonth, end: endOfMonth)
             let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate) { _, results, error in
-                guard let steps = results?.sumQuantity()?.doubleValue(for: .count()), error == nil else {
-                    completion(.failure(NSError(domain: "HealthManagerError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch HealthKit data."])))
-                    
-                    return
+                if let error = error, error.localizedDescription != "No data available for the specifed predicate."{
+                    completion(.failure(error))
                 }
+                
+                let steps = results?.sumQuantity()?.doubleValue(for: .count()) ?? 0
+                
                 if i == 0 {
                     oneYearMonths.append(MonthlyStepModel(date: month, count: Int(steps)))
                     ytdMonths.append(MonthlyStepModel(date: month, count: Int(steps)))
@@ -252,3 +253,4 @@ extension HealthManager {
         healthStore.execute(query)
     }
 }
+

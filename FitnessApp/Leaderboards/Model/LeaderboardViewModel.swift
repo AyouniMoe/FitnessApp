@@ -1,0 +1,83 @@
+//
+//  LeaderboardViewModel.swift
+//  FitnessApp
+//
+//  Created by Mohamad Alayouni on 3/11/25.
+//
+
+import Foundation
+
+class LeaderboardViewModel: ObservableObject {
+    
+    @Published var leaderResult = LeaderboardResult(user: nil, top10: [])
+    
+    var mockData = [
+        LeaderboardUser(username: "Ayouni", count: 65636),
+        LeaderboardUser(username: "Vivek", count: 6536),
+        LeaderboardUser(username: "Sarshad", count: 6563),
+        LeaderboardUser(username: "Flavean", count: 5636),
+        LeaderboardUser(username: "Melina", count: 6566),
+        LeaderboardUser(username: "Lucas", count: 6636),
+        LeaderboardUser(username: "Denish", count: 6636),
+        LeaderboardUser(username: "Hemaa", count: 6636),
+        LeaderboardUser(username: "Bhoomika", count: 6636),
+        LeaderboardUser(username: "Madeline", count: 6636),
+        LeaderboardUser(username: "Isabella", count: 6636),
+    ]
+    
+    init() {
+        Task {
+            do {
+                try await setupLeaderboardData()
+                
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    func setupLeaderboardData() async throws {
+        try await postStepCountForUser()
+        let result = try await fetchLeaderboards()
+        DispatchQueue.main.async {
+            self.leaderResult = result
+        }
+    }
+    
+         struct LeaderboardResult {
+            let user: LeaderboardUser?
+            let top10: [LeaderboardUser]
+            
+        }
+        
+        private func fetchLeaderboards() async throws -> LeaderboardResult {
+            let leaders = try await DatabaseManager.shared.fetchLeaderboards()
+            let top10 = Array(leaders.sorted(by: { $0.count > $1.count }).prefix(10))
+            let username = UserDefaults.standard.string(forKey: "username")
+            
+           // if let username = username, top10.contains(where: { _ in 0.username == username}) {
+            if let username = username, !top10.contains(where: { $0.username == username }) {
+
+                let user = leaders.first(where: { $0.username == username})
+                return LeaderboardResult(user: user, top10: top10)
+            } else {
+                return LeaderboardResult(user: nil, top10: top10)
+            }
+            
+        }
+    }
+    private func postStepCountForUser() async throws {
+        guard let username = UserDefaults.standard.string(forKey: "username") else {
+            throw URLError(.badURL)
+        }
+        let steps = try await fetchCurrentWeekStepCount()
+        try await DatabaseManager.shared.postStepCountUpdateForUser(leader:
+                LeaderboardUser(username: username, count: Int(steps)))
+    }
+private func fetchCurrentWeekStepCount() async throws -> Double {
+    try await withCheckedThrowingContinuation({ continuation in
+        HealthManager.shared.fetchCurrentWeekStepCount { result in
+            continuation.resume(with: result)
+        }
+    })
+}
+
