@@ -165,32 +165,30 @@ class HealthManager {
         
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
         
-    let query = HKSampleQuery(sampleType: workouts, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors : [sortDescriptor]) { _, results, error in
-            
+    let query = HKSampleQuery(sampleType: workouts, predicate: predicate, limit: HKObjectQueryNoLimit,
+            sortDescriptors : [sortDescriptor]) { _, results, error in
             guard let workouts = results as? [HKWorkout], error == nil else {
                 completion(.failure(error!))
                 return
             }
-       
-//        let workoutsArray = workouts.map( { Workout(id: nil, title: $0.workoutActivityType.name, image: $0.workoutActivityType.image, tintColor: Color($0.workoutActivityType.color), duration:
-//            "\(Int($0.duration)/60) mins", date: $0.startDate.formatWorkoutDate(), calories:
-//            ($0.totalEnergyBurned?.doubleValue(for: .kilocalorie()).formattedNumberString() ?? "-") + "kcal") } )
-        let workoutsArray = workouts.map { workout in
-            let activeEnergy = workout.statistics(for: HKQuantityType(.activeEnergyBurned))?.sumQuantity()?.doubleValue(for: .kilocalorie()) ?? 0
-            return Workout(
-//                id: nil,
-                title: workout.workoutActivityType.name,
-                image: workout.workoutActivityType.image,
-                tintColor: Color(workout.workoutActivityType.color),
-                duration: "\(Int(workout.duration) / 60) mins",
-                date: workout.startDate.formatWorkoutDate(),
-                calories: activeEnergy.formattedNumberString() + "kcal"
-            )
-        }
-
-       
+        let workoutsArray = workouts.map( { Workout(title: $0.workoutActivityType.name, image: $0.workoutActivityType.image, tintColor: Color($0.workoutActivityType.color), duration:
+            "\(Int($0.duration)/60) mins", date: $0.startDate, calories:
+            ($0.totalEnergyBurned?.doubleValue(for: .kilocalorie()).formattedNumberString() ?? "-") + "kcal") } )
         completion(.success(workoutsArray))
-        
+//        
+//        let workoutsArray = workouts.map { workout in
+//            let activeEnergy = workout.statistics(for: HKQuantityType(.activeEnergyBurned))?.sumQuantity()?.doubleValue(for: .kilocalorie()) ?? 0
+//            return Workout(
+////                id: nil,
+//                title: workout.workoutActivityType.name,
+//                image: workout.workoutActivityType.image,
+//                tintColor: Color(workout.workoutActivityType.color),
+//                duration: "\(Int(workout.duration) / 60) mins",
+//                date: workout.startDate.formatWorkoutDate(),
+//                calories: activeEnergy.formattedNumberString() + "kcal"
+//            )
+//        }
+//        completion(.success(workoutsArray))
         }
         healthStore.execute(query)
     }

@@ -8,6 +8,7 @@
 import SwiftUI
 import Charts
 
+
 struct CharstView: View {
     @StateObject var viewModel = ChartsViewModel()
     @State var selectedChart: ChartOptions = .oneWeek

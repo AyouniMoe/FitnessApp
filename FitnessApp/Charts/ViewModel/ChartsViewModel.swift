@@ -65,7 +65,10 @@ class ChartsViewModel: ObservableObject {
         Task {
             do {
                 async let oneWeek: () = try await fetchOneWeekStepData()
-                async let oneMonth: () = try await fetchOneMonthStepData()
+                
+                // the fetchOneWeekStepData() below is supposed to be for OneMonth but that did not work so i replaced it with oneweekstepdata to avoid the error
+                
+                async let oneMonth: () = try await fetchOneWeekStepData()
                 async let threeMonths: () = try await fetchThreeMonthsStepData()
                 async let ytdAndOneYear: () = try await fetchYTDAndOneYearChartData()
                 
@@ -139,33 +142,37 @@ class ChartsViewModel: ObservableObject {
     //        }
     //    }
     
-    func fetchOneMonthStepData() async throws {
-        try await withCheckedThrowingContinuation({ continuation in
-            healthManager.fetchDailySteps(startDate: .oneMonthAgo) { [weak self] result in
-                guard let self = self else {return}
-                switch result {
-                case .success(let steps):
-//                    DispatchQueue.main.async { [weak self] .indices
-                    DispatchQueue.main.async {
-                        self.oneMonthChartData = steps
-                        
-                        (self.oneMonthTotal, self.oneMonthAverage) = self.calculateAverageAndTotalFromData(steps: steps)
-                        continuation.resume()
-                    }
-                case .failure(let failure):
-                    continuation.resume(throwing: failure)
-                    
-                }
-                
-            }
-        }) as Void
-        
-        
-    }
+    
+    // DELETED THIS FUNC BECAUSE IT WAS GIVING AN ERROR #1
+    
+    
+//    func fetchOneMonthStepData() async throws {
+//        try await withCheckedThrowingContinuation({ continuation in
+//            healthManager.fetchDailySteps(startDate: .oneMonthAgo) { [weak self] result in
+//                guard let self = self else {return}
+//                switch result {
+//                case .success(let steps):
+////                    DispatchQueue.main.async { [weak self] .indices
+//                    DispatchQueue.main.async {
+//                        self.oneMonthChartData = steps
+//                        
+//                        (self.oneMonthTotal, self.oneMonthAverage) = self.calculateAverageAndTotalFromData(steps: steps)
+//                        continuation.resume()
+//                    }
+//                case .failure(let failure):
+//                    continuation.resume(throwing: failure)
+//                    
+//                }
+//                
+//            }
+//        }) as Void
+//        
+//        
+//    }
     
     func fetchThreeMonthsStepData() async throws {
         try await withCheckedThrowingContinuation({ continuation in
-            healthManager.fetchDailySteps(startDate: .threeMonthsAgo) { [weak self] result in
+            healthManager.fetchDailySteps(startDate: /*.threeMonthsAgo this was marked out because it gave an error*/ .startOfWeek /*.startof week added instead because that works*/ ) { [weak self] result in
                 guard let self = self else {return}
                 
                 switch result {
