@@ -7,7 +7,7 @@
 
 import Foundation
 import HealthKit
-//import SwiftUICore
+import SwiftUICore
 //import SwiftUI
 
 
@@ -178,7 +178,7 @@ class HealthManager {
         let workoutsArray = workouts.map { workout in
             let activeEnergy = workout.statistics(for: HKQuantityType(.activeEnergyBurned))?.sumQuantity()?.doubleValue(for: .kilocalorie()) ?? 0
             return Workout(
-                id: nil,
+//                id: nil,
                 title: workout.workoutActivityType.name,
                 image: workout.workoutActivityType.image,
                 tintColor: Color(workout.workoutActivityType.color),

@@ -14,6 +14,7 @@ struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     @Binding var isPremium: Bool
     @State var showPaywall = false
+    @State var showAllActivities = false
     
     var body: some View {
         NavigationStack {
@@ -87,6 +88,7 @@ struct HomeView: View {
                         
                         Button {
                             if isPremium {
+                                showAllActivities.toggle()
                             } else {
                                 showPaywall = true
                             }
@@ -100,19 +102,11 @@ struct HomeView: View {
                         }
                         
                     }
-                    //                    .padding(.horizontal)
-                    //
-                    //                    LazyVGrid(columns: Array(repeating: GridItem(spacing: 20), count: 2)) {
-                    //                        ForEach(viewModel.activities, id: \.id) { activity in
-                    //                            ActivityCard(activity: activity)
-                    //                        }
-                    //                    }
-                    .padding(.horizontal)
                     
-                    if !viewModel.activities.isEmpty {
+                                        .padding(.horizontal)
+                    if !viewModel.activities.isEmpty{
                         LazyVGrid(columns: Array(repeating: GridItem(spacing: 20), count: 2)) {
-                            ForEach(viewModel.activities, id: \.title) {
-                                activity in
+                            ForEach(viewModel.activities.prefix(showAllActivities == true ? 8 : 4), id: \.title) { activity in
                                 ActivityCard(activity: activity)
                             }
                         }
@@ -127,7 +121,8 @@ struct HomeView: View {
                         
                         if isPremium {
                             NavigationLink {
-                                EmptyView()
+                                
+                                MonthWorkoutView()
                             } label: {
                                 Text ("Show More")
                                     .padding(.all, 10)
@@ -177,7 +172,7 @@ struct HomeView: View {
     
     struct HomeView_Previews: PreviewProvider {
         static var previews: some View {
-            HomeView(isPremium: .constant(false))
+            HomeView(isPremium: .constant(true))
         }
     }
     
