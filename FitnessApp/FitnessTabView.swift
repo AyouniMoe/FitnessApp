@@ -14,14 +14,6 @@ struct FitnessTabView: View {
     @State var isPremium = false
     @State var showTerms = true
     
-    init() {
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.stackedLayoutAppearance.selected.iconColor = .green
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.green]
-        UITabBar.appearance().scrollEdgeAppearance = appearance
-    }
-    
     var body: some View {
         TabView(selection: $selectedTab) {
             HomeView(isPremium: $isPremium)
@@ -52,6 +44,7 @@ struct FitnessTabView: View {
                 }
             
         }
+        .tint(.green)
         . onAppear {
             print(username)
             showTerms = username == nil

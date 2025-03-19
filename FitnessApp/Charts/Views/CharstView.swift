@@ -28,22 +28,17 @@ struct CharstView: View {
                         ChartDataView(average: viewModel.oneWeekAverage, total: viewModel.oneWeekTotal)
                         
                         Chart {
-                            ForEach(viewModel.mockWeekChartData) { data in
-//                                BarMark(
-//                                x: .value(data.date.formatted(), data.date,
-//                                unit: .day), y: .value("Steps", data.count)
-                                BarMark(
-                                x: .value("Date", data.date, unit: .day),
-                                y: .value("Steps", data.count)
-                                )
+                            ForEach(viewModel.oneWeekChartData) { data in
+                                BarMark(x: .value(data.date.formatted(), data.date,
+                                                  unit: .day), y: .value("Steps", data.count))
                             }
                         }
                     }
                 case .oneMonth:
                     VStack {
-                        ChartDataView(average: viewModel.oneMonthAverage, total: viewModel.oneMonthTotal)
+                        ChartDataView(average: viewModel.OneMonthAverage, total: viewModel.oneMonthTotal)
                         Chart {
-                            ForEach(viewModel.mockOneMonthData) { data in
+                            ForEach(viewModel.oneMonthChartData) { data in
                                 BarMark(x: .value(data.date.formatted(), data.date,
                                                   unit: .day), y: .value("Steps", data.count))
                             }
@@ -53,7 +48,7 @@ struct CharstView: View {
                     VStack {
                         ChartDataView(average: viewModel.ThreeMonthAverage, total: viewModel.threeMonthTotal)
                         Chart {
-                            ForEach(viewModel.mockThreeMonthData) { data in
+                            ForEach(viewModel.ThreeMonthsChartData) { data in
                                 BarMark(x: .value(data.date.formatted(), data.date,
                                                   unit: .day), y: .value("Steps", data.count))
                             }
@@ -98,7 +93,7 @@ struct CharstView: View {
                 }
             }
         }
-        alert("Oops", isPresented: $viewModel.presentError, actions: {
+        alert("Oops", isPresented: $viewModel.showAlert, actions: {
             Text("Ok")
         }, message: {
             Text("We ran into an error fetching your data. Please make sure you allow access and try again.")
@@ -214,8 +209,12 @@ struct CharstView: View {
 //                }
 //            }
 //        }
-//        .alert("Oops", isPresented: $viewModel.presentError, actions: {
-//            Button("Ok", role: .cancel) { }
+//        .alert("Oops", isPresented: $viewModel.showAlert, actions: {
+////            Button(role: .cancel) {
+//viewModel.showAlert = false
+//} label: {
+//Text("Ok")
+//}
 //        }, message: {
 //            Text("We ran into an error fetching your data. Please make sure you allow access and try again.")
 //        })

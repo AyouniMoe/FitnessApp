@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 import SwiftUICore
-//import SwiftUI
+import SwiftUI
 
 
 
@@ -238,34 +238,50 @@ extension HealthManager {
         
         var oneYearMonths = [MonthlyStepModel]()
         var ytdMonths = [MonthlyStepModel]()
+        var completedQueries = 0
+        var encounteredError: Error? = nil
+        
         for i in 0...11 {
             let month = calendar.date(byAdding: .month, value: -i, to: Date()) ?? Date()
             let (startOfMonth, endOfMonth) = month.fetchMonthStartAndEndDate()
             let predicate = HKQuery.predicateForSamples(withStart: startOfMonth, end: endOfMonth)
+            
             let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate) { _, results, error in
-                if let error = error, error.localizedDescription != "No data available for the specifed predicate."{
-                    completion(.failure(error))
-                }
-                
-                let steps = results?.sumQuantity()?.doubleValue(for: .count()) ?? 0
-                
-                if i == 0 {
-                    oneYearMonths.append(MonthlyStepModel(date: month, count: Int(steps)))
-                    ytdMonths.append(MonthlyStepModel(date: month, count: Int(steps)))
+                if let error = error {
+                    // Skip the "No data available" error, handle others
+                    if error.localizedDescription != "No data available for the specified predicate." {
+                        encounteredError = error
+                    }
                 } else {
-                    oneYearMonths.append(MonthlyStepModel(date: month, count: Int(steps)))
-                    if calendar.component(.year, from: Date()) == calendar.component(.year, from: month) {
+                    let steps = results?.sumQuantity()?.doubleValue(for: .count()) ?? 0
+                    if i == 0 {
+                        oneYearMonths.append(MonthlyStepModel(date: month, count: Int(steps)))
                         ytdMonths.append(MonthlyStepModel(date: month, count: Int(steps)))
+                    } else {
+                        oneYearMonths.append(MonthlyStepModel(date: month, count: Int(steps)))
+                        if calendar.component(.year, from: Date()) == calendar.component(.year, from: month) {
+                            ytdMonths.append(MonthlyStepModel(date: month, count: Int(steps)))
+                        }
                     }
                 }
                 
-                if i == 11 {
-                    completion(.success(YearChartDataResult(ytd: ytdMonths, oneYear: oneYearMonths)))
+                // Increment completedQueries and check if it's the last one
+                completedQueries += 1
+                
+                // Once all queries are completed, call the completion handler
+                if completedQueries == 12 {
+                    if let error = encounteredError {
+                        completion(.failure(error))
+                    } else {
+                        completion(.success(YearChartDataResult(ytd: ytdMonths, oneYear: oneYearMonths)))
+                    }
                 }
             }
+            
             healthStore.execute(query)
         }
     }
+
 }
 
 //MARK: Leaderboard view

@@ -9,28 +9,7 @@ import Foundation
 
 class ChartsViewModel: ObservableObject {
     
-    //    var mockWeekChartData = [
-    //        DailyStepModel(date: Date(), count: 10000),
-    //        DailyStepModel(date: Calendar.current.date(byAdding: .day, value:-1, to: Date()) ?? Date(), count: 4800),
-    //        DailyStepModel(date: Calendar.current.date(byAdding: .day, value:-2, to: Date()) ?? Date(), count: 4983),
-    //        DailyStepModel(date: Calendar.current.date(byAdding: .day, value:-3, to: Date()) ?? Date(), count: 3989),
-    //        DailyStepModel(date: Calendar.current.date(byAdding: .day, value:-4, to: Date()) ?? Date(), count: 3489),
-    //        DailyStepModel(date: Calendar.current.date(byAdding: .day, value:-5, to: Date()) ?? Date(), count: 3948),
-    //        DailyStepModel(date: Calendar.current.date(byAdding: .day, value:-6,
-    //                to: Date()) ?? Date(), count: 9075)
-    //    ]
-    //    var mockYTDChartData = [
-    //        MonthlyStepModel(date: Date(), count: 10000),
-    //        MonthlyStepModel(date: Calendar.current.date(byAdding: .month, value:-1, to: Date()) ?? Date(), count: 48000),
-    //        MonthlyStepModel(date: Calendar.current.date(byAdding: .month, value:-2, to: Date()) ?? Date(), count: 49803),
-    //        MonthlyStepModel(date: Calendar.current.date(byAdding: .month, value:-3, to: Date()) ?? Date(), count: 48000),
-    //        MonthlyStepModel(date: Calendar.current.date(byAdding: .month, value:-4, to: Date()) ?? Date(), count: 49083),
-    //        MonthlyStepModel(date: Calendar.current.date(byAdding: .month, value:-5, to: Date()) ?? Date(), count: 40800),
-    //        MonthlyStepModel(date: Calendar.current.date(byAdding: .month, value:-6, to: Date()) ?? Date(), count: 49803),
-    //        MonthlyStepModel(date: Calendar.current.date(byAdding: .month, value:-7, to: Date()) ?? Date(), count: 48000),
-    //    ]
-    
-    //@Published var oneWeekAverage = 129
+       
     @Published var oneWeekChartData = [DailyStepModel]()
     @Published var oneWeekAverage = 0
     @Published var oneWeekTotal = 0
@@ -53,15 +32,9 @@ class ChartsViewModel: ObservableObject {
     
     let healthManager = HealthManager.shared
     
-    @Published var presentError = false
+    @Published var showAlert = false
     
     init() {
-        //        let mockOneMonth = mockDataForDays(days: 30)
-        //        let mockThreeMonth = mockDataForDays(days: 90)
-        //        DispatchQueue.main.async {
-        //            self.mockOneMonthData = mockOneMonth
-        //            self.mockThreeMonthData = mockThreeMonth
-        //        }
         Task {
             do {
                 async let oneWeek: () = try await fetchOneWeekStepData()
@@ -76,7 +49,7 @@ class ChartsViewModel: ObservableObject {
             } catch {
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
-                    self.presentError = true
+                    self.showAlert = true
                     
                 }
             }

@@ -132,8 +132,12 @@
 //                
 //            }
 //            .alert("Oops", isPresented: $viewModel.showAlert) {
-//                Text("Ok")
-//                
+//                Button(role: .cancel) {
+//viewModel.showAlert = false
+//} label: {
+//Text("Ok")
+//}
+//
 //            } message: {
 //                Text("Unable to load workouts for \(viewModel.selectedDate.monthAndYearFormat()). Please make sure you havbe workouts for the selected month and try again.")
 //            }
@@ -205,7 +209,11 @@ struct MonthWorkoutView: View {
             viewModel.updateSelectedDate()
         }
         .alert("Oops", isPresented: $viewModel.showAlert) {
-            Text("Ok")
+            Button(role: .cancel) {
+                viewModel.showAlert = false
+            } label: {
+                Text("Ok")
+            }
         } message: {
             Text("Unable to load workouts for \(viewModel.selectedDate.monthAndYearFormat()). Please make sure you have workouts for the selected month and try again.")
         }

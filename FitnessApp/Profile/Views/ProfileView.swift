@@ -190,7 +190,11 @@ struct ProfileView: View {
         .background(RoundedRectangle(cornerRadius: 10).fill(.gray.opacity(0.15)))
     //IT SEEMS LIKE HERE IS WHERE I SHOULD ADD THE CONTACT US ALERT FROM 6:29:04 IN THE VIDEO
         .alert("Oops", isPresented: $viewModel.showAlert) {
-            Text("Ok")
+            Button(role: .cancel) {
+                viewModel.showAlert = false
+            } label: {
+                Text("Ok")
+            }
         } message: {
             Text("We were unable to open your mail application. Please have your mail application installed.")
         }

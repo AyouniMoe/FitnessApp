@@ -1,5 +1,5 @@
 {
-  "originHash" : "65868788c2cd17869a266a63bad41ddd473d1fa2508fe8c19f102e99ccdec44f",
+  "originHash" : "d68f965e57fd0f413632156643777f11f191b16bcdcd731ee35fc41e0ed99871",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk.git",
       "state" : {
-        "revision" : "eb523407e4293568ed55590728205c359cbecc5b",
-        "version" : "11.9.0"
+        "revision" : "2e4a4daac9da51f79c131e76cb47e785dd7708c4",
+        "version" : "11.10.0"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleAppMeasurement.git",
       "state" : {
-        "revision" : "d80e25104abe76d69a134d4ec18f011edd8df06c",
-        "version" : "11.9.0"
+        "revision" : "defe1970a9099d47765592ebd7ac5f5e9fdb57c6",
+        "version" : "11.10.0"
       }
     },
     {
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios-spm.git",
       "state" : {
-        "revision" : "a037a1fa19548b6ebc778b8d425df914d16b96e3",
-        "version" : "5.19.0"
+        "revision" : "562c92396a186e01e7f5cd42bb29471981347332",
+        "version" : "5.20.0"
       }
     },
     {

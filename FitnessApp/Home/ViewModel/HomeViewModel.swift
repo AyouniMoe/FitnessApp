@@ -17,7 +17,7 @@ class HomeViewModel: ObservableObject {
     @Published var  stand: Int = 0
     @Published var activities = [Activity]()
     @Published var workouts = [Workout]()
-    @Published var presentError = false
+    @Published var showAlert = false
     
 //    var mockActivities = [
 //        Activity(title: "Today Steps", subtitle: "Goal 12,000", image: "figure.walk", tintColor: .green, amount: "9,812"),
@@ -50,7 +50,7 @@ class HomeViewModel: ObservableObject {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
         
-                    self.presentError = true
+                    self.showAlert = true
                 }
             }
         }

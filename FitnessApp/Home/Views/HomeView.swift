@@ -157,8 +157,12 @@ struct HomeView: View {
             //{
             //{
             
-            .alert("Oops", isPresented: $viewModel.presentError, actions: {
-                Text("Ok")
+            .alert("Oops", isPresented: $viewModel.showAlert, actions: {
+                Button(role: .cancel) {
+                    viewModel.showAlert = false
+                } label: {
+                    Text("Ok")
+                }
                 
             }, message: {
                 Text("There was an issue fetching some of your data. Some health tracking requires an Apple Watch. Please make sure your Apple Watch is turned on and paired with your iPhone.")
