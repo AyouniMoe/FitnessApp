@@ -155,7 +155,7 @@ import SwiftUI
 
 struct MonthWorkoutView: View {
     
-    @StateObject var viewModel = MonthWorkoutsViewModel()
+    @State var viewModel = MonthWorkoutsViewModel()
     
     var body: some View {
         VStack {

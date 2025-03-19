@@ -14,7 +14,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @StateObject var viewModel = ProfileViewModel()
+    @State var viewModel = ProfileViewModel()
 
     var body: some View {
         mainContent
@@ -129,6 +129,12 @@ struct ProfileView: View {
     }
 
     // MARK: - Edit Buttons
+    
+    //FitnessProfileEditButton(title: "Done", backgroundColor: .primary) {
+    //viewModel.setNewName()
+//    if !viewModel.currentName.isEmpty {
+//
+//    }
     private var editButtons: some View {
         VStack {
             editNameButton

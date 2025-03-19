@@ -12,7 +12,7 @@ import FirebaseFirestore
   
     struct LeaderboardView: View {
         @AppStorage("username") var username: String?
-        @StateObject var viewModel = LeaderboardViewModel()
+        @State var viewModel = LeaderboardViewModel()
         
         @Binding var showTerms: Bool
         

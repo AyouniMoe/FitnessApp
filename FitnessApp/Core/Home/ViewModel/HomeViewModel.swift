@@ -8,16 +8,21 @@
 import Foundation
 import HealthKit
 
-class HomeViewModel: ObservableObject {
+@Observable
+class HomeViewModel {
     
     let healthManager = HealthManager.shared
     
-    @Published var  calories: Int = 0
-    @Published var  exercise: Int = 0
-    @Published var  stand: Int = 0
-    @Published var activities = [Activity]()
-    @Published var workouts = [Workout]()
-    @Published var showAlert = false
+    var showPaywall = false
+    var showAllActivities = false
+    
+    var  calories: Int = 0
+    var  exercise: Int = 0
+    var  stand: Int = 0
+    
+    var activities = [Activity]()
+    var workouts = [Workout]()
+    var showAlert = false
     
 //    var mockActivities = [
 //        Activity(title: "Today Steps", subtitle: "Goal 12,000", image: "figure.walk", tintColor: .green, amount: "9,812"),

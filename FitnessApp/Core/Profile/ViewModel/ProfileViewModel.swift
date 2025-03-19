@@ -8,16 +8,18 @@
 import Foundation
 import SwiftUI
 
-class ProfileViewModel: ObservableObject {
-    @Published var isEditingName = false
-    @Published var currentName = ""
-    @Published var profileName: String? = UserDefaults.standard.string(forKey: "profileName")
+@Observable
+
+class ProfileViewModel {
+     var isEditingName = false
+     var currentName = ""
+     var profileName: String? = UserDefaults.standard.string(forKey: "profileName")
     
-    @Published var isEditingImage = false
-    @Published var profileImage: String? = UserDefaults.standard.string(forKey: "profileImage")
-    @Published var selectedImage: String? = UserDefaults.standard.string(forKey: "profileImage")
+     var isEditingImage = false
+     var profileImage: String? = UserDefaults.standard.string(forKey: "profileImage")
+     var selectedImage: String? = UserDefaults.standard.string(forKey: "profileImage")
     
-    @Published var showAlert = false
+     var showAlert = false
     
     var images = [
         "user1", "user2", "user3", "user4", "user5", "user6", "user7", "user8"
@@ -39,9 +41,12 @@ class ProfileViewModel: ObservableObject {
     }
     
     func setNewName() {
-        profileName = currentName
-        UserDefaults.standard.setValue(currentName, forKey: "profileName")
-        dismissEdit()
+       // if !currentName.isEmpty { }     IN VID 7:58:08 this was eddited I left it out because the profile view did not have the correct code and wasnt able to see where to incorporate the correct code in the profileview
+        
+            profileName = currentName
+            UserDefaults.standard.setValue(currentName, forKey: "profileName")
+            dismissEdit()
+
     }
     
     func didSelectNewImage(name: String) {

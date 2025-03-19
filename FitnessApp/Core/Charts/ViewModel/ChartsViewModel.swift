@@ -7,32 +7,35 @@
 
 import Foundation
 
-class ChartsViewModel: ObservableObject {
+
+@Observable
+
+class ChartsViewModel {
     
        
-    @Published var oneWeekChartData = [DailyStepModel]()
-    @Published var oneWeekAverage = 0
-    @Published var oneWeekTotal = 0
+     var oneWeekChartData = [DailyStepModel]()
+     var oneWeekAverage = 0
+     var oneWeekTotal = 0
     
-    @Published var oneMonthChartData = [DailyStepModel]()
-    @Published var OneMonthAverage = 0
-    @Published var oneMonthTotal = 0
+     var oneMonthChartData = [DailyStepModel]()
+     var OneMonthAverage = 0
+     var oneMonthTotal = 0
     
-    @Published var ThreeMonthsChartData = [DailyStepModel]()
-    @Published var ThreeMonthAverage = 0
-    @Published var threeMonthTotal = 0
+     var ThreeMonthsChartData = [DailyStepModel]()
+     var ThreeMonthAverage = 0
+     var threeMonthTotal = 0
     
-    @Published var ytdChartData = [MonthlyStepModel]()
-    @Published var ytdAverage = 0
-    @Published var ytdTotal = 0
+     var ytdChartData = [MonthlyStepModel]()
+     var ytdAverage = 0
+     var ytdTotal = 0
     
-    @Published var oneYearChartData = [MonthlyStepModel]()
-    @Published var oneYearAverage = 0
-    @Published var oneYearTotal = 0
+     var oneYearChartData = [MonthlyStepModel]()
+     var oneYearAverage = 0
+     var oneYearTotal = 0
     
     let healthManager = HealthManager.shared
     
-    @Published var showAlert = false
+     var showAlert = false
     
     init() {
         Task {

@@ -11,10 +11,10 @@ import SwiftUI
 
 
 struct HomeView: View {
-    @StateObject var viewModel = HomeViewModel()
+    @State var viewModel = HomeViewModel()
     @Binding var isPremium: Bool
-    @State var showPaywall = false
-    @State var showAllActivities = false
+//    @State var showPaywall = false
+//    @State var showAllActivities = false
     
     var body: some View {
         NavigationStack {
@@ -88,9 +88,9 @@ struct HomeView: View {
                         
                         Button {
                             if isPremium {
-                                showAllActivities.toggle()
+                                viewModel.showAllActivities.toggle()
                             } else {
-                                showPaywall = true
+                                viewModel.showPaywall = true
                             }
                             
                         } label: {
@@ -106,7 +106,7 @@ struct HomeView: View {
                                         .padding(.horizontal)
                     if !viewModel.activities.isEmpty{
                         LazyVGrid(columns: Array(repeating: GridItem(spacing: 20), count: 2)) {
-                            ForEach(viewModel.activities.prefix(showAllActivities == true ? 8 : 4), id: \.title) { activity in
+                            ForEach(viewModel.activities.prefix(viewModel.showAllActivities == true ? 8 : 4), id: \.title) { activity in
                                 ActivityCard(activity: activity)
                             }
                         }
@@ -132,7 +132,7 @@ struct HomeView: View {
                             }
                         } else {
                             Button {
-                                showPaywall = true
+                                viewModel.showPaywall = true
                                 
                             } label: {
                                 Text ("Show More")
@@ -168,7 +168,7 @@ struct HomeView: View {
                 Text("There was an issue fetching some of your data. Some health tracking requires an Apple Watch. Please make sure your Apple Watch is turned on and paired with your iPhone.")
             })
             
-            .sheet(isPresented: $showPaywall) {
+            .sheet(isPresented: $viewModel.showPaywall) {
                 PaywallView(isPremium: $isPremium)
             }
         }

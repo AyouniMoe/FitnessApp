@@ -7,15 +7,20 @@
 
 import Foundation
 
-class MonthWorkoutsViewModel: ObservableObject {
+@Observable
+
+class MonthWorkoutsViewModel {
     
-    @Published var selectedMonth = 0
-    @Published var selectedDate = Date()
+     var selectedMonth = 0
+     var selectedDate = Date()
     var fetchedMonths: Set<String> = []
-    @Published var workouts: [Workout] = []
-    @Published var currentMonthWorkouts: [Workout] = []
-    @Published var showAlert = false
+     var workouts: [Workout] = []
+     var currentMonthWorkouts: [Workout] = []
+     var showAlert = false
     
+    
+    
+    let healthManager = HealthManager.shared
     init() {
         Task {
             do {
@@ -51,7 +56,7 @@ class MonthWorkoutsViewModel: ObservableObject {
     
     func fetchWorkoutsForMonth() async throws {
         try await withCheckedThrowingContinuation( { continuation in
-            HealthManager.shared.fetchWorkoutsForMonth(month: selectedDate) { result in
+            healthManager.fetchWorkoutsForMonth(month: selectedDate) { result in
                 switch result {
                 case .success(let workouts):
                     DispatchQueue.main.async { [weak self] in
